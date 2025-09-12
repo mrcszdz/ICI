@@ -25,4 +25,8 @@ public class GhostsAgressive extends GhostController {
 	        return moves;
 	}
 
+	public String getName() {
+    	return "GhostsAggresive";
+    }
+	
 }

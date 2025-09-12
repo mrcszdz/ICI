@@ -1,0 +1,28 @@
+package es.ucm.fdi.ici.c2425.practica0.grupoIndividual;
+
+import java.util.Random;
+
+import pacman.controllers.PacmanController;
+import pacman.game.Game;
+import pacman.game.Constants.DM;
+import pacman.game.Constants.GHOST;
+import pacman.game.Constants.MOVE;
+
+public class MsPacManRunAway extends PacmanController{
+
+	    @Override
+	    public MOVE getMove(Game game, long timeDu,e) {
+	    	int minDist = game.getGhostCurrentNodeIndex(GHOST.BLINKY);
+	    	for (GHOST ghostType : GHOST.values()) {
+	            if (minDist > game.getDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(ghostType), DM.PATH)) {
+	            	minDist =  game.getDistance(game.getPacmanCurrentNodeIndex(), game.getGhostCurrentNodeIndex(ghostType), DM.PATH);
+	            }
+	        }
+	        return game.getApproximateNextMoveAwayFromTarget(game.getPacmanCurrentNodeIndex(), minDist,null , DM.PATH);
+	    }
+
+	    public String getName() {
+	    	return "MsPacManRunAway";
+	    }
+	    
+}
