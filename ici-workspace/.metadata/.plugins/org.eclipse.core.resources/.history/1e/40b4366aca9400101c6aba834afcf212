@@ -1,0 +1,29 @@
+import es.ucm.fdi.ici.c2425.practica0.SanchezDiez.GhostsAgressive;
+import es.ucm.fdi.ici.c2425.practica0.SanchezDiez.GhostsRandom;
+import es.ucm.fdi.ici.c2425.practica0.SanchezDiez.MsPacMan;
+import es.ucm.fdi.ici.c2425.practica0.SanchezDiez.MsPacManRandom;
+import es.ucm.fdi.ici.c2425.practica0.SanchezDiez.MsPacManRunAway;
+import pacman.Executor;
+import pacman.controllers.GhostController;
+import pacman.controllers.HumanController;
+import pacman.controllers.KeyBoardInput;
+import pacman.controllers.PacmanController;
+
+public class ExecutorTest {
+
+    public static void main(String[] args) {
+        Executor executor = new Executor.Builder()
+                .setTickLimit(4000)
+                .setVisual(true)
+                .setScaleFactor(3.0)
+                .build();
+
+        PacmanController pacMan = new MsPacMan();
+        GhostController ghosts = new GhostsAgressive();
+        
+        System.out.println( 
+            executor.runGame(pacMan, ghosts, 50) //last parameter defines speed
+        );     
+    }
+	
+}

@@ -1,0 +1,65 @@
+package es.ucm.fdi.ici.c2425.practica0.SanchezDiez;
+
+import java.util.EnumMap;
+import java.util.Random;
+
+import pacman.controllers.GhostController;
+import pacman.game.Constants.DM;
+import pacman.game.Constants.GHOST;
+import pacman.game.Constants.MOVE;
+import pacman.game.Game;
+
+public class Ghosts extends GhostController{
+
+	private int _limit = 50;
+	private Random _rnd = new Random();
+	 private MOVE[] allMoves = MOVE.values();
+	private EnumMap<GHOST, MOVE> moves = new EnumMap<GHOST, MOVE>(GHOST.class);
+	
+	@Override
+	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
+		int pacManPos = game.getPacmanCurrentNodeIndex();
+        for (GHOST ghostType : GHOST.values()) {
+            if (game.doesGhostRequireAction(ghostType)) {
+            	
+            	moves.put(ghostType, nextMove(ghostType, pacManPos, _limit, game));
+            }
+        }
+        return moves;
+	}
+
+	private MOVE nextMove(GHOST ghostType, int pacManPos, int limit,  Game game) {
+		
+		if(game.getGhostEdibleTime(ghostType) > 0 || closeToPill(pacManPos, limit, game))
+			
+			return game.getApproximateNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghostType), pacManPos, game.getGhostLastMoveMade(ghostType), DM.PATH);
+		
+	/*	if (_rnd.nextFloat() < 0.9){
+			return game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghostType), pacManPos, game.getGhostLastMoveMade(ghostType), DM.PATH);
+		}
+		*/
+		return allMoves[_rnd.nextInt(allMoves.length)];
+	}
+	
+	private Boolean closeToPill(int pacManPos, int limit, Game game) {
+		return game.getDistance(pacManPos, getNearestPowerPill(pacManPos, game), null) <= limit;
+	}
+	
+	 private int getNearestPowerPill(int pacManPos, Game game) {
+	    	double minDist = Integer.MAX_VALUE;
+	    	int nPpill = 0;
+	    	for	(int ppill : game.getActivePowerPillsIndices()) {
+	    		double dist = game.getDistance(pacManPos, ppill, game.getPacmanLastMoveMade() , DM.PATH);
+	    		if(dist < minDist) {
+	    			minDist = dist;
+	    			nPpill = ppill;
+	    		}
+	    	}
+	    	return nPpill;
+	    }
+	
+	public String getName() {
+    	return "Ghosts";
+    }
+	
+}

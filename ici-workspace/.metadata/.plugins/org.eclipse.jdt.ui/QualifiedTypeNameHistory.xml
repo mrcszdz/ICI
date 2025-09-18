@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="es.ucm.fdi.ici.c2425.practica0.grupoIndividual.MsPacManRunAway"/>
+    <fullyQualifiedTypeName name="pacman.game.GameView"/>
+    <fullyQualifiedTypeName name="java.awt.Color"/>
+</qualifiedTypeNameHistroy>

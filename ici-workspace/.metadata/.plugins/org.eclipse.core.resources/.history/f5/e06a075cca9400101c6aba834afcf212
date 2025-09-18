@@ -1,0 +1,39 @@
+package es.ucm.fdi.ici.c2425.practica0.SanchezDiez;
+
+import java.util.EnumMap;
+
+import pacman.controllers.GhostController;
+import pacman.game.Constants.DM;
+import pacman.game.Constants.GHOST;
+import pacman.game.Constants.MOVE;
+import pacman.game.Game;
+
+public class Ghosts extends GhostController{
+
+	private EnumMap<GHOST, MOVE> moves = new EnumMap<GHOST, MOVE>(GHOST.class);
+	
+	@Override
+	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
+		int pacManPos = game.getPacmanCurrentNodeIndex();
+        for (GHOST ghostType : GHOST.values()) {
+            if (game.doesGhostRequireAction(ghostType)) {
+            	
+            	moves.put(ghostType, nextMove(ghostType, pacManPos, game));
+            	
+                moves.put(ghostType, game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghostType), pacManPos,game.getGhostLastMoveMade(ghostType) , DM.PATH));
+            }
+        }
+        return moves;
+	}
+
+	private MOVE nextMove(GHOST ghostType, int pacManPos, Game game) {
+		
+		//if(game.getGhostEdibleTime(ghostType) > 0 || game)
+		return null;
+	}
+	
+	public String getName() {
+    	return "Ghosts";
+    }
+	
+}

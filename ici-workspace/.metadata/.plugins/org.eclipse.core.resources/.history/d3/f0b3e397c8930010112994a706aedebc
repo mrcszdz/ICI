@@ -1,0 +1,97 @@
+package es.ucm.fdi.ici.c2425.practica0.grupoIndividual;
+
+import pacman.controllers.PacmanController;
+import pacman.game.Game;
+import pacman.game.Constants.DM;
+import pacman.game.Constants.GHOST;
+import pacman.game.Constants.MOVE;
+
+public class MarcosSanchezDiezPr0MsPacMan extends PacmanController{
+
+	    @Override
+	    public MOVE getMove(Game game, long timeDue) {
+	    	int pacManPos = game.getPacmanCurrentNodeIndex();
+	    	GHOST nearestGhost = getNearestChasingGhost(20, pacManPos , game);
+	    	
+	    	if(nearestGhost!= null)
+	    		return  game.getApproximateNextMoveAwayFromTarget(pacManPos, game.getGhostCurrentNodeIndex(nearestGhost), game.getPacmanLastMoveMade() , DM.PATH);
+	    	
+	    	nearestGhost = getNearestEdibleGhost(20, pacManPos, game);
+	    	if(nearestGhost != null)
+	    		return game.getApproximateNextMoveTowardsTarget(pacManPos, game.getGhostCurrentNodeIndex(nearestGhost), game.getPacmanLastMoveMade() , DM.PATH);
+	    	
+	    	int nPill = min(getNearestPill(pacManPos, game), getNearestPowerPill(pacManPos, game));
+	    	
+	    	return game.getApproximateNextMoveTowardsTarget(pacManPos, nPill, game.getPacmanLastMoveMade() , DM.PATH);
+	    }
+	    
+	    private GHOST getNearestChasingGhost(int limit, int pacManPos, Game game) {
+	    	GHOST nGhost = null;
+	    	double minDist = limit;
+	    	for(GHOST ghostType : GHOST.values()) {
+	    		int ghostPos = game.getGhostCurrentNodeIndex(ghostType);
+	    		
+	    		if(game.getGhostEdibleTime(ghostType) <= 0) {
+	    			double dist = game.getDistance(pacManPos, ghostPos, DM.PATH);
+	    			if(dist < minDist){
+	    				minDist = dist;
+	    				nGhost = ghostType;
+	    			}
+	    		}
+	    	}
+	    	return nGhost;
+	    }
+	    
+	    private GHOST getNearestEdibleGhost(int limit, int pacManPos, Game game) {
+	    	GHOST nGhost = null;
+	    	double minDist = limit;
+	    	for(GHOST ghostType : GHOST.values()) {
+	    		int ghostPos = game.getGhostCurrentNodeIndex(ghostType);
+	    		
+	    		if(game.getGhostEdibleTime(ghostType) > 0) {
+	    			double dist = game.getDistance(pacManPos, ghostPos, DM.PATH);
+	    			if(dist < minDist){
+	    				minDist = dist;
+	    				nGhost = ghostType;
+	    			}
+	    		}
+	    	}
+	    	return nGhost;
+	    }
+	    
+	    private int getNearestPill(int pacManPos, Game game) {
+	    	double minDist = Integer.MAX_VALUE;
+	    	int nPill = 0;
+	    	for	(int pill : game.getActivePillsIndices()) {
+	    		double dist = game.getDistance(pacManPos, pill, game.getPacmanLastMoveMade() , DM.PATH);
+	    		if(dist < minDist) {
+	    			minDist = dist;
+	    			nPill = pill;
+	    		}
+	    	}
+	    	return nPill;
+	    }
+	    
+	    private int getNearestPowerPill(int pacManPos, Game game) {
+	    	double minDist = Integer.MAX_VALUE;
+	    	int nPpill = 0;
+	    	for	(int ppill : game.getActivePowerPillsIndices()) {
+	    		double dist = game.getDistance(pacManPos, ppill, game.getPacmanLastMoveMade() , DM.PATH);
+	    		if(dist < minDist) {
+	    			minDist = dist;
+	    			nPpill = ppill;
+	    		}
+	    	}
+	    	return nPpill;
+	    }
+	    
+	   private int min(int n, int m) {
+		   if(n < m) return n;
+		   else return m;
+	   }
+	   
+	    public String getName() {
+	    	return "MsPacMan";
+	    }
+	    
+}
