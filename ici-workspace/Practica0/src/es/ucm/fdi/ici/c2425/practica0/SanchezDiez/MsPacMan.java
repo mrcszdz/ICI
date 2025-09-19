@@ -12,26 +12,33 @@ import pacman.game.Constants.MOVE;
 public class MsPacMan extends PacmanController{
 
 	private int _limit = 50;
-	
+	private Color[] _colors = {Color.RED, Color.PINK, Color.CYAN, Color.ORANGE};
 	    @Override
 	    public MOVE getMove(Game game, long timeDue) {
 	    	int pacManPos = game.getPacmanCurrentNodeIndex();
 	    	GHOST nearestGhost = getNearestChasingGhost(_limit, pacManPos , game);
 	    	
 	    	if(nearestGhost != null) {
-	    		GameView.addLines(game, Color.CYAN, pacManPos, game.getGhostCurrentNodeIndex(nearestGhost));;
+	    		GameView.addPoints(game, getColor(nearestGhost), game.getShortestPath(pacManPos, game.getGhostCurrentNodeIndex(nearestGhost)));
 	    		return  game.getApproximateNextMoveAwayFromTarget(pacManPos, game.getGhostCurrentNodeIndex(nearestGhost), game.getPacmanLastMoveMade() , DM.PATH);
 	    	}
 	    	
 	    	nearestGhost = getNearestEdibleGhost(_limit, pacManPos, game);
 	    	if(nearestGhost != null) {
-	    		GameView.addLines(game, Color.CYAN, pacManPos, game.getGhostCurrentNodeIndex(nearestGhost));
+	    		GameView.addPoints(game, getColor(nearestGhost), game.getShortestPath(pacManPos, game.getGhostCurrentNodeIndex(nearestGhost)));
 	    		return game.getApproximateNextMoveTowardsTarget(pacManPos, game.getGhostCurrentNodeIndex(nearestGhost), game.getPacmanLastMoveMade() , DM.PATH);
 	    	}
 	    	
 	    	int nPill = min(getNearestPill(pacManPos, game), getNearestPowerPill(pacManPos, game));
 	    	
 	    	return game.getApproximateNextMoveTowardsTarget(pacManPos, nPill, game.getPacmanLastMoveMade() , DM.PATH);
+	    }
+	    
+	    private Color getColor(GHOST g) {
+	    	for	(GHOST ghostType : GHOST.values()) {
+	    		if(ghostType.equals(g)) return _colors[ghostType.ordinal()];
+	    	}
+	    	return null;
 	    }
 	    
 	    private GHOST getNearestChasingGhost(int limit, int pacManPos, Game game) {

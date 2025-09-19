@@ -1,3 +1,2 @@
-2025/09/18-20:42:48.058 563c Reusing MANIFEST C:\Users\Marcos\Documents\GitHub\ICI\ici-workspace\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
-2025/09/18-20:42:48.067 563c Recovering log #3
-2025/09/18-20:42:48.069 563c Reusing old log C:\Users\Marcos\Documents\GitHub\ICI\ici-workspace\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
+2025/09/19-14:14:46.411 47c0 Creating DB C:\Users\usuario_local\Documents\GitHub\ICI\ici-workspace\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb since it was missing.
+2025/09/19-14:14:46.427 47c0 Reusing MANIFEST C:\Users\usuario_local\Documents\GitHub\ICI\ici-workspace\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
