@@ -18,6 +18,7 @@ public final class Ghosts extends GhostController {
     private GHOST blinky;
     private Random rnd = new Random();
     final float distanceToBlinky = 2; // distancia a la que estar de blinky para bajar la flag
+    private Boolean passedBlinky = true;
 
     public Ghosts(){
     	super();
@@ -56,8 +57,17 @@ public final class Ghosts extends GhostController {
         		//Ms.PacMan para acorralarle
         		if(!game.isGhostEdible(ghost)) 
         		{
+        			MOVE acercarseAlPacman = game.getNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
+        					game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH);
+        			
+        			if(acorralado(game,ghost)) {
+        				moves.put(ghost, acercarseAlPacman);
+        				continue;
+        			}
+        				
+        			
         			//Quitas de la lista los movimientos que te alejen de Pacman y te acerquen a Blinky
-
+        			
         	    	//Quitas de la lista de movimientos el que te acerca a blinky
         			availableMoves.remove(game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
         					game.getGhostCurrentNodeIndex(blinky), game.getGhostLastMoveMade(ghost), DM.PATH));
@@ -67,8 +77,6 @@ public final class Ghosts extends GhostController {
         					game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH));
         			
         			//Si queda libre el movimiento de acercarse al Pacman te acercas, si no cojes otro camino valido
-        			MOVE acercarseAlPacman = game.getNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
-        					game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH);
         			
         			if(availableMoves.contains(acercarseAlPacman)) {
         				moves.put(ghost, acercarseAlPacman);
@@ -114,7 +122,7 @@ public final class Ghosts extends GhostController {
         	availableMoves.add(m);
     }
     
-    /*private void removeNotWantedMoves(Game game, GHOST ghost) {
+    private void removeNotWantedMoves(Game game, GHOST ghost) {
     	//Quitas de la lista de movimientos el que te acerca a blinky
 		availableMoves.remove(game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
 				game.getGhostCurrentNodeIndex(blinky), game.getGhostLastMoveMade(ghost), DM.PATH));
@@ -122,7 +130,7 @@ public final class Ghosts extends GhostController {
 		//Quitas de la lista de movimientos el que te aleja del PacMan
 		availableMoves.remove(game.getNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost),
 				game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH));
-    }*/
+    }
     
     private boolean dontGoTowardPacman(Game game, GHOST ghost) {
     	return  game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
@@ -130,6 +138,18 @@ public final class Ghosts extends GhostController {
     			!= 
 				game.getNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
 				game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH);
+    }
+    
+    private boolean acorralado(Game game, GHOST ghost) {
+    	/*return (game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost), game.getGhostCurrentNodeIndex(blinky)) 
+    			> game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost), game.getPacmanCurrentNodeIndex()));*/
+    	int[] path = game.getShortestPath(game.getGhostCurrentNodeIndex(ghost), game.getGhostCurrentNodeIndex(GHOST.BLINKY));
+    	
+    	for(int i: path) {
+    		if(i == game.getPacmanCurrentNodeIndex())
+    			return true;
+    	}
+    	return false;
     }
     
     public String getName() {
