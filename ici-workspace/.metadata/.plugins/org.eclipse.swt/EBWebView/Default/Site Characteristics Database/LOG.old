@@ -1,5 +1,3 @@
-2025/10/02-20:09:52.094 291c Log #6: 0 ops saved to Table #7 OK
-2025/10/02-20:09:52.099 291c Archiving C:\Users\Marcos\Documents\GitHub\ICI\ici-workspace\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000006.log: OK
-2025/10/02-20:09:52.099 291c Table #4: 1 entries OK
-2025/10/02-20:09:52.116 291c Archiving C:\Users\Marcos\Documents\GitHub\ICI\ici-workspace\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001: OK
-2025/10/02-20:09:52.138 291c **** Repaired leveldb C:\Users\Marcos\Documents\GitHub\ICI\ici-workspace\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database; recovered 1 files; 130 bytes. Some data may have been lost. ****
+2025/10/03-14:19:06.842 72e0 Reusing MANIFEST C:\Users\julia\Documents\GitHub\ICI\ici-workspace\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/MANIFEST-000001
+2025/10/03-14:19:06.845 72e0 Recovering log #12
+2025/10/03-14:19:06.846 72e0 Reusing old log C:\Users\julia\Documents\GitHub\ICI\ici-workspace\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Site Characteristics Database/000012.log 
