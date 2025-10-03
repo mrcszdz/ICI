@@ -1,5 +1,8 @@
 package es.ucm.fdi.ici.c2526.practica1.grupoYY;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pacman.controllers.PacmanController;
 import pacman.game.Constants.DM;
 import pacman.game.Constants.GHOST;
@@ -23,16 +26,39 @@ public class MsPacMan extends PacmanController{
     	//si >= 2 va hacia la powerPill mas cercana
     	if(nearG >= 2) {
     		int nPP = getNearestPowerPill(pacManPos, game);
-    		nMove = game.getApproximateNextMoveTowardsTarget(pacManPos, nPP, game.getPacmanLastMoveMade() , DM.PATH);
+    		
+			if (nPP != -1) {
+				int[] path = game.getShortestPath(pacManPos, nPP);
+				int ghostCollide = hayFantasmaEnMedio(game, path, pacManPos, nPP);
+    		 
+	    		 if(ghostCollide != -1) {
+	    			return game.getApproximateNextMoveAwayFromTarget(pacManPos,ghostCollide , game.getPacmanLastMoveMade() , DM.PATH);
+	    		 }
+	    		 
+	    		 else 
+	    			 return game.getApproximateNextMoveTowardsTarget(pacManPos, nPP, game.getPacmanLastMoveMade() , DM.PATH);
+			}
     	}
     	
     	//si no, va hacia la pill mas cercana que no tenga fantasmas cerca
-    	else {
+    	else{
     		int nP = nextPillSegura(game, pacManPos);
-    		nMove = game.getApproximateNextMoveTowardsTarget(pacManPos, nP, game.getPacmanLastMoveMade() , DM.PATH);
+    		return game.getApproximateNextMoveTowardsTarget(pacManPos, nP, game.getPacmanLastMoveMade() , DM.PATH);
+    	}
+    	return null;
+    }
+    
+    private int hayFantasmaEnMedio(Game game, int[] path, int pacManPos, int nPP) {
+    	List<Integer> ghostPos = new ArrayList<Integer>();
+    	for	(GHOST ghostType : GHOST.values())
+    		ghostPos.add(game.getGhostCurrentNodeIndex(ghostType));
+    	
+    	for(int i : path) {
+    		if (ghostPos.contains(i)) return i;
     	}
     	
-    	return nMove;
+    	return -1;
+    	
     }
     
     private int nextPillSegura(Game game, int pacManPos) {
@@ -72,6 +98,9 @@ public class MsPacMan extends PacmanController{
     private int getNearestPowerPill(int pacManPos, Game game) {
     	double minDist = Integer.MAX_VALUE;
     	int nPpill = 0;
+    	//Si no hay PowerPills activas devuelve -1
+    	if(game.getNumberOfActivePowerPills() == 0) return -1;
+    	
     	for	(int ppill : game.getActivePowerPillsIndices()) {
     		double dist = game.getDistance(pacManPos, ppill, game.getPacmanLastMoveMade() , DM.PATH);
     		if(dist < minDist) {
