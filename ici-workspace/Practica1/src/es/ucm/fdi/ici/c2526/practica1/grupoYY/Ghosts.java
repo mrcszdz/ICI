@@ -18,6 +18,8 @@ public final class Ghosts extends GhostController {
     private Random rnd = new Random();
     final float distanceToBlinky = 2; // distancia a la que estar de blinky para bajar la flag
     private Boolean passedBlinky = true;
+    private int initialFlagTime = 5;
+    private int flagTime= 0;
 
     public Ghosts(){
     	super();
@@ -32,12 +34,18 @@ public final class Ghosts extends GhostController {
         moves.clear();
         
         isSomeOneEdible = false;
-        // me gustaria quitar ese break por una busqueda con un while (mas eficiente)
-        for (GHOST ghost : GHOST.values()) {
-        	if(game.isGhostEdible(ghost)) 
-        	{
-        		isSomeOneEdible = true;
-        	}
+        
+        if(flagTime <= 0) {
+            // me gustaria quitar ese break por una busqueda con un while (mas eficiente)
+            for (GHOST ghost : GHOST.values()) {
+            	if(game.isGhostEdible(ghost)) 
+            	{
+            		isSomeOneEdible = true;
+            	}
+            }
+        }
+        else {
+        	flagTime -= game.getTimeOfLastGlobalReversal();
         }
         
         for (GHOST ghost : GHOST.values()) {
@@ -69,7 +77,7 @@ public final class Ghosts extends GhostController {
         		else if(game.isGhostEdible(ghost) && isSomeOneEdible)
         		{
         			//huyes hacia blinky si no esta muerto y no es la direccion hacia Ms.Pacman
-        			if(game.getGhostLairTime(blinky) <= 0 && dontGoTowardPacman(game,ghost)) {
+        			if(game.getGhostLairTime(blinky) <= 3 && !acorralado(game,ghost)) {
         				moves.put(ghost, game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
         						game.getGhostCurrentNodeIndex(blinky), game.getGhostLastMoveMade(ghost), DM.PATH));
         			}
@@ -90,14 +98,6 @@ public final class Ghosts extends GhostController {
         	}
         }
         return moves;
-    }
-    
-    private boolean dontGoTowardPacman(Game game, GHOST ghost) {
-    	return  game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
-				game.getGhostCurrentNodeIndex(blinky), game.getGhostLastMoveMade(ghost), DM.PATH) 
-    			!= 
-				game.getNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
-				game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH);
     }
     
     private boolean acorralado(Game game, GHOST ghost) {
