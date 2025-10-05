@@ -13,7 +13,6 @@ import pacman.game.Game;
 public final class Ghosts extends GhostController {
     private EnumMap<GHOST, MOVE> moves = new EnumMap<GHOST, MOVE>(GHOST.class);
     private MOVE[] allMoves = MOVE.values();
-    private java.util.ArrayList<MOVE> availableMoves = new ArrayList<MOVE>();
     private boolean isSomeOneEdible;
     private GHOST blinky;
     private Random rnd = new Random();
@@ -31,7 +30,6 @@ public final class Ghosts extends GhostController {
     @Override
     public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
         moves.clear();
-        reestableceAvailbleMoves();
         
         isSomeOneEdible = false;
         // me gustaria quitar ese break por una busqueda con un while (mas eficiente)
@@ -64,27 +62,9 @@ public final class Ghosts extends GhostController {
         				moves.put(ghost, acercarseAlPacman);
         				continue;
         			}
-        				
-        			
-        			//Quitas de la lista los movimientos que te alejen de Pacman y te acerquen a Blinky
-        			
-        	    	//Quitas de la lista de movimientos el que te acerca a blinky
-        			availableMoves.remove(game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
-        					game.getGhostCurrentNodeIndex(blinky), game.getGhostLastMoveMade(ghost), DM.PATH));
-        			
-        			//Quitas de la lista de movimientos el que te aleja del PacMan
-        			availableMoves.remove(game.getNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost),
-        					game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH));
-        			
-        			//Si queda libre el movimiento de acercarse al Pacman te acercas, si no cojes otro camino valido
-        			
-        			if(availableMoves.contains(acercarseAlPacman)) {
-        				moves.put(ghost, acercarseAlPacman);
-        			}
         			else {
-        				//Cojes un movimiento aleatorio de los que quedan
-        				moves.put(ghost, availableMoves.get(rnd.nextInt(availableMoves.size())));
-        			}
+            			moves.put(ghost, intentaAcorralar(game,ghost));
+            			}
         		}
         		else if(game.isGhostEdible(ghost) && isSomeOneEdible)
         		{
@@ -107,29 +87,9 @@ public final class Ghosts extends GhostController {
         			moves.put(ghost, game.getNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost),
     						game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH));
         		}
-        		
-
-				reestableceAvailbleMoves();
         	}
         }
         return moves;
-    }
-    
-    private void reestableceAvailbleMoves() {
-    	//hace que la lista vuelva a contener todos los movimientos posibles
-    	availableMoves.clear();
-        for(MOVE m:allMoves)
-        	availableMoves.add(m);
-    }
-    
-    private void removeNotWantedMoves(Game game, GHOST ghost) {
-    	//Quitas de la lista de movimientos el que te acerca a blinky
-		availableMoves.remove(game.getApproximateNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
-				game.getGhostCurrentNodeIndex(blinky), game.getGhostLastMoveMade(ghost), DM.PATH));
-		
-		//Quitas de la lista de movimientos el que te aleja del PacMan
-		availableMoves.remove(game.getNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost),
-				game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH));
     }
     
     private boolean dontGoTowardPacman(Game game, GHOST ghost) {
@@ -154,6 +114,20 @@ public final class Ghosts extends GhostController {
     			return true;
     	}
     	return false;
+    }
+    
+    private MOVE intentaAcorralar(Game game, GHOST ghost) {
+    	
+    	for(MOVE move: game.getPossibleMoves(game.getGhostCurrentNodeIndex(ghost))) {
+    		if(move != game.getNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost),
+					game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH) && 
+    				move != game.getNextMoveAwayFromTarget(game.getGhostCurrentNodeIndex(ghost),
+        					game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH))
+    			return move;
+    	}
+    	
+    	return game.getNextMoveTowardsTarget(game.getGhostCurrentNodeIndex(ghost),
+				game.getPacmanCurrentNodeIndex(), game.getGhostLastMoveMade(ghost), DM.PATH);
     }
     
     public String getName() {
