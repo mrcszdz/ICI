@@ -143,7 +143,11 @@ public final class Ghosts extends GhostController {
     private boolean acorralado(Game game, GHOST ghost) {
     	/*return (game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost), game.getGhostCurrentNodeIndex(blinky)) 
     			> game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost), game.getPacmanCurrentNodeIndex()));*/
-    	int[] path = game.getShortestPath(game.getGhostCurrentNodeIndex(ghost), game.getGhostCurrentNodeIndex(GHOST.BLINKY));
+    	if(game.getShortestPathDistance(game.getGhostCurrentNodeIndex(ghost), game.getGhostCurrentNodeIndex(blinky))<= 0) {
+    		return false;
+    	}
+    		
+    	int[] path = game.getShortestPath(game.getGhostCurrentNodeIndex(ghost), game.getGhostCurrentNodeIndex(blinky));
     	
     	for(int i: path) {
     		if(i == game.getPacmanCurrentNodeIndex())
